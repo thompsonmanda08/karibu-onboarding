@@ -4,8 +4,9 @@ import LoadingPage from "./loading";
 import { getServerSession } from "./actions";
 import Image from "next/image";
 import { OnboardingSlider } from "@/components/OnboardingSlider";
-import UserOnboardingForm from "@/components/user_onboarding_form";
+import UserOnboardingForm from "@/components/onboarding/user_onboarding_form";
 import Link from "next/link";
+import PoweredByInterwebb from "@/components/_PoweredByInterwebb";
 
 export default async function App() {
   return (
@@ -29,6 +30,7 @@ export default async function App() {
           </div>
           <div className="flex-[2] flex flex-col items-center overflow-y-auto no-scrollbar overflow-clip relative max-h-screen max-w-full z-0">
             <UserOnboardingForm />
+            <PoweredByInterwebb />
           </div>
         </section>
       </main>

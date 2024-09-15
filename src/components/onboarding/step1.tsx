@@ -1,7 +1,7 @@
 "use client";
 
 import { Input, Radio, RadioGroup } from "@nextui-org/react";
-import { OnboardingFormProps } from "../user_onboarding_form";
+import { OnboardingFormProps } from "./user_onboarding_form";
 import CardHeader from "../CardHeader";
 
 const Step1 = ({

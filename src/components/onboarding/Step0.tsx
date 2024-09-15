@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import { RadioGroup } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import CustomRadioButton from "../ui/RadioButton";
-import { FormData, OnboardingFormProps } from "../user_onboarding_form";
+import { FormData, OnboardingFormProps } from "./user_onboarding_form";
 
 export default function Step0({ updateDetails }: OnboardingFormProps) {
   useEffect(() => {

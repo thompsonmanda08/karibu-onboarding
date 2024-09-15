@@ -5,14 +5,14 @@ import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 
-import Spinner from "./Spinner";
+import Spinner from "../Spinner";
 import useCustomTabsHook from "@/hooks/useCustomTabsHook";
-import CompletionBar from "./completion_bar";
+import CompletionBar from "../completion_bar";
 import { Button } from "@nextui-org/react";
-import Step1 from "./onboarding/step1";
-import Step0 from "./onboarding/Step0";
-import Step2 from "./onboarding/step2";
-import Step3 from "./onboarding/step3";
+import Step1 from "./step1";
+import Step0 from "./Step0";
+import Step2 from "./step2";
+import Step3 from "./step3";
 
 const ONBOARDING_STEPS = [
   "Wallet/Mobile Number",
