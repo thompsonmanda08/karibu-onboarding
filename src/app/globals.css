@@ -1,0 +1,123 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 168 61% 52%;
+    --primary-foreground: 168 33% 97%;
+
+    --secondary: 196 53% 17%;
+    --secondary-foreground: var(--primary-foreground);
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 168 100%, 63%;
+    --accent-foreground: var(--primary-foreground);
+
+    --destructive: 2 78% 50%;
+    --destructive-foreground: var(--primary-foreground);
+
+    --border: 168 61% 64%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: var(--secondary);
+    --foreground: var(--primary-foreground);
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: var(--primary);
+    --primary-foreground: var(--primary-foreground);
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: var(--primary-foreground);
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: var(--primary-foreground);
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: var(--primary-foreground);
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: var(--primary-foreground);
+
+    --border: 168 61% 64%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground scroll-smooth;
+
+    color: hsl(var(--foreground));
+    background-color: hsl(var(--background));
+  }
+}
+
+@layer utilities {
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button,
+  input[type="number"] {
+    -webkit-appearance: none;
+    -moz-appearance: textfield;
+    margin: 0;
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.gradient__text {
+  --gradient-blue-pink: linear-gradient(
+    90deg,
+    hsl(36, 100%, 42%) 0%,
+    hsl(46, 90%, 62%) 100%
+  );
+  background: hsl(44, 100%, 48%);
+  background: var(--gradient-blue-pink);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  background: #eaeef8;
+  border-radius: 5px;
+  height: 8px;
+  z-index: 0 !important;
+}
+
+::-webkit-scrollbar-thumb {
+  width: 6px;
+  height: 2px;
+  background-color: #b7b8be;
+  border-radius: 5px;
+  z-index: 0 !important;
+}
