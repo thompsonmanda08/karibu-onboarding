@@ -15,6 +15,7 @@ import Step2 from "./step2";
 import Step3 from "./step3";
 import { notify } from "@/lib/utils";
 import { APIResponse } from "@/lib/types";
+import Step4 from "./step4";
 
 const ONBOARDING_STEPS = [
   "Wallet/Mobile Number",
@@ -84,6 +85,7 @@ export default function UserOnboardingForm() {
     <Step1 key={"step-1"} {...userDetails} updateDetails={updateDetails} />, // PERSONAL & CONTACT INFO
     <Step2 key={"step-2"} {...userDetails} updateDetails={updateDetails} />,
     <Step3 key={"step-3"} {...userDetails} updateDetails={updateDetails} />,
+    <Step4 key={"step-4"} {...userDetails} updateDetails={updateDetails} />,
   ]);
 
   function updateDetails(newDetails: Partial<FormData>) {

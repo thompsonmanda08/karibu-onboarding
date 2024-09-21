@@ -16,9 +16,9 @@ const Step4 = ({ feedback, updateDetails }: OnboardingFormProps) => {
         }
       />
       <Textarea
-        label="Location and Property descriptions"
+        label="Feedback"
         variant="bordered"
-        placeholder="Describe where it is located using landmarks (optional) and also some details on whether is is a bedspace, a whole room or full house for rent etc."
+        placeholder="Give us some feedback (optional)"
         onChange={(e) => updateDetails({ feedback: e.target.value })}
       />
     </>

@@ -5,7 +5,7 @@ import { OnboardingFormProps } from "./user_onboarding_form";
 import CardHeader from "../CardHeader";
 import Universities from "./university_list";
 
-const Step3 = ({ email, updateDetails, userType }: OnboardingFormProps) => {
+const Step3 = ({ updateDetails, userType }: OnboardingFormProps) => {
   // update email in parent component when user enters new email
   // TODO:
   return (
@@ -19,7 +19,7 @@ const Step3 = ({ email, updateDetails, userType }: OnboardingFormProps) => {
         }
       />
 
-      <Universities />
+      <Universities updateUserDetails={updateDetails} />
     </>
   );
 };

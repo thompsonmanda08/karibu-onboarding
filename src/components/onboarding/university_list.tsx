@@ -17,7 +17,7 @@ type University = {
   [x: string]: any;
 };
 
-function Universities({ className, userType }: any) {
+function Universities({ updateUserDetails, userType }: any) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState(false);
   const [newUniversity, setNewUniversity] = useState<University>({
@@ -55,6 +55,7 @@ function Universities({ className, userType }: any) {
 
     setCloseByUniversities((prev) => [...prev, newUniversity]);
     notify("success", "University Added!");
+    updateUserDetails({ universities: closeByUniversities });
 
     // if (response?.success) {
     //   notify("success", "University Added!");
