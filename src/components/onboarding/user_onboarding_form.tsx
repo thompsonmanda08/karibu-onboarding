@@ -9,10 +9,12 @@ import Spinner from "../Spinner";
 import useCustomTabsHook from "@/hooks/useCustomTabsHook";
 import CompletionBar from "../completion_bar";
 import { Button } from "@nextui-org/react";
-import Step1 from "./step1";
 import Step0 from "./Step0";
+import Step1 from "./step1";
 import Step2 from "./step2";
 import Step3 from "./step3";
+import { notify } from "@/lib/utils";
+import { APIResponse } from "@/lib/types";
 
 const ONBOARDING_STEPS = [
   "Wallet/Mobile Number",
@@ -29,12 +31,18 @@ export type FormData = {
   email: string;
   mobileNumber?: string;
   nrcNumber?: string;
-  user_type?: string;
-  addressLine?: string;
+  userType?: string;
+  addressLine1?: string;
   city?: string;
   area?: string;
   street?: string;
+  province?: string;
+  country?: string;
   addressDescrition?: string;
+  rentalType?: string;
+  requiredService?: string;
+  feedback?: string;
+  [x: string]: any;
 };
 
 export type OnboardingFormProps = Partial<FormData> & {
@@ -42,14 +50,22 @@ export type OnboardingFormProps = Partial<FormData> & {
 };
 
 export default function UserOnboardingForm() {
-  const router = useRouter();
-
   const [userDetails, setUserDetails] = useState<FormData>({
     firstName: "",
     lastName: "",
     gender: "",
     nrcNumber: "",
     email: "",
+    feedback: "",
+
+    //
+    addressLine1: "",
+    street: "",
+    rentalType: "",
+    city: "",
+    province: "",
+    country: "",
+    requiredService: "", // TO BE USED FOR WHAT
   });
 
   const {
@@ -64,8 +80,8 @@ export default function UserOnboardingForm() {
     navigateForward,
     isLoading,
   } = useCustomTabsHook([
-    <Step0 key={"step-0"} {...userDetails} updateDetails={updateDetails} />,
-    <Step1 key={"step-1"} {...userDetails} updateDetails={updateDetails} />,
+    <Step0 key={"step-0"} {...userDetails} updateDetails={updateDetails} />, // USER TYPE
+    <Step1 key={"step-1"} {...userDetails} updateDetails={updateDetails} />, // PERSONAL & CONTACT INFO
     <Step2 key={"step-2"} {...userDetails} updateDetails={updateDetails} />,
     <Step3 key={"step-3"} {...userDetails} updateDetails={updateDetails} />,
   ]);
@@ -79,8 +95,63 @@ export default function UserOnboardingForm() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
+
+    // SAVE USER INFO
+    // if (currentTabIndex == 1) {
+    //   const { firstName, lastName, email, mobileNumber, gender } = userDetails;
+    //   // VALIDATIONS
+    //   if (!email || !firstName || !lastName || !mobileNumber || !gender) {
+    //     notify("error", "Missing Required Fields");
+    //   }
+
+    //   const response: APIResponse = await createPotentialUser({
+    //     firstName,
+    //     lastName,
+    //     email,
+    //     mobileNumber,
+    //     gender,
+    //   });
+
+    //   if (response?.success) {
+    //     navigateForward();
+    //     return;
+    //   }
+    // }
+
+    // if (currentTabIndex == 2) {
+    //   const { addressLine1, street, rentalType, city, province, country } =
+    //     userDetails;
+    //   // VALIDATIONS
+    //   if (
+    //     !addressLine1 ||
+    //     !street ||
+    //     !rentalType ||
+    //     !city ||
+    //     !province ||
+    //     !country
+    //   ) {
+    //     notify("error", "Missing Required Fields");
+    //   }
+
+    //   const response: APIResponse = await submitProperyAdress({
+    //     addressLine1,
+    //     street,
+    //     rentalType,
+    //     city,
+    //     province,
+    //     country,
+    //   });
+
+    //   if (response?.success) {
+    //     navigateForward();
+    //     return;
+    //   }
+    // }
+
     navigateForward();
   }
+
+  console.log(userDetails);
 
   return (
     <>

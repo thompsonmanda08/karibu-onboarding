@@ -30,7 +30,7 @@ const config = {
         inter: ["var(--font-inter)"],
       },
       colors: {
-        border: "hsl(var(--border))",
+        border: "hsl(var(--primary))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
         background: "hsl(var(--background))",
@@ -85,7 +85,21 @@ const config = {
       },
     },
   },
-  plugins: [require("tailwindcss-animate"), nextui()],
+  plugins: [
+    require("tailwindcss-animate"),
+    nextui({
+      themes: {
+        light: {
+          colors: {
+            primary: {
+              DEFAULT: "#38cfb1",
+              foreground: "#ffffff",
+            },
+          },
+        },
+      },
+    }),
+  ],
 } satisfies Config;
 
 export default config;

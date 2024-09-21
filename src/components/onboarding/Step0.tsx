@@ -10,7 +10,7 @@ export default function Step0({ updateDetails }: OnboardingFormProps) {
   useEffect(() => {
     // Set Default  Registration STAGE
     updateDetails({
-      user_type: "LANDLORD",
+      userType: "LANDLORD",
     });
   }, []);
   return (
@@ -22,7 +22,7 @@ export default function Step0({ updateDetails }: OnboardingFormProps) {
         defaultValue={"LANDLORD"}
         onChange={(e) =>
           updateDetails({
-            user_type: e.target.value,
+            userType: e.target.value,
           })
         }
       >
@@ -36,7 +36,7 @@ export default function Step0({ updateDetails }: OnboardingFormProps) {
 
           <CustomRadioButton
             description="Looking for bedspace or a house for rent"
-            value="STUDENT"
+            value="TENANT"
             disabled={true}
           >
             <p className="mb-1 font-semibold">Tentant / Student</p>

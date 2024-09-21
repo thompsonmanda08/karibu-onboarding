@@ -11,6 +11,8 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "sourceMap": true,
+    "outDir": "dist",
     "incremental": true,
     "plugins": [
       {

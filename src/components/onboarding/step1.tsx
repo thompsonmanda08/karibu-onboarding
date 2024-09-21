@@ -15,7 +15,7 @@ const Step1 = ({
   // TODO:
   return (
     <>
-      <CardHeader title="Personal Information" />
+      <CardHeader title="Personal & Contact Information" />
       <div className="flex gap-2">
         <Input
           isRequired
@@ -56,6 +56,34 @@ const Step1 = ({
         <Radio value="MALE">Male</Radio>
         <Radio value="FEMALE">Female</Radio>
       </RadioGroup>
+      <div className="flex flex-col gap-4">
+        <Input
+          isRequired
+          type="number"
+          variant="bordered"
+          label="Mobile Number"
+          // className="max-w-md"
+          // endContent={}
+          onChange={(e) =>
+            updateDetails({
+              mobileNumber: e.target.value,
+            })
+          }
+        />
+        <Input
+          isRequired
+          type="email"
+          variant="bordered"
+          label="Email"
+          // className="max-w-md"
+          // endContent={}
+          onChange={(e) =>
+            updateDetails({
+              email: e.target.value,
+            })
+          }
+        />
+      </div>
     </>
   );
 };
