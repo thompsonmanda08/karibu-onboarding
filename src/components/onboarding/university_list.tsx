@@ -2,11 +2,17 @@
 
 import { cn, notify } from "@/lib/utils";
 import React, { useState } from "react";
-import { Button, Card, CardBody, useDisclosure } from "@nextui-org/react";
+import {
+  Button,
+  Card,
+  CardBody,
+  Tooltip,
+  useDisclosure,
+} from "@nextui-org/react";
 
 import CreateNewUniversity from "./ceate_new_university";
 
-import { FaBuildingFlag } from "react-icons/fa6";
+import { FaBuildingFlag, FaXmark } from "react-icons/fa6";
 import { HiOutlinePlus } from "react-icons/hi";
 import Loader from "../Loader";
 import { APIResponse } from "@/lib/types";
@@ -46,7 +52,7 @@ function Universities({ updateUserDetails, userType }: any) {
   async function handleCreateNewUniversity() {
     setLoading(true);
 
-    if (newUniversity.name.length <= 3 && newUniversity.location.length <= 3) {
+    if (!newUniversity?.name || !newUniversity.location) {
       notify("error", "Provide valid name and description!");
       setLoading(false);
     }
@@ -71,6 +77,12 @@ function Universities({ updateUserDetails, userType }: any) {
     onOpenChange();
   }
 
+  function removeIndex(index: number) {
+    setCloseByUniversities((prev) => {
+      return prev.filter((_, i) => i !== index);
+    });
+  }
+
   return (
     <>
       <Card className={cn("gap-6 p-2  w-full min-h-96 shadow-lg mt-8")}>
@@ -83,9 +95,14 @@ function Universities({ updateUserDetails, userType }: any) {
             color="primary"
             className={"px-4"}
           >
-            <HiOutlinePlus className="h-5 w-5" />
+            <HiOutlinePlus className="aspect-square w-4" />
+            Add
           </Button>
-          <UniversitiesList isLoading={loading} list={closeByUniversities} />
+          <UniversitiesList
+            isLoading={loading}
+            list={closeByUniversities}
+            removeIndex={removeIndex}
+          />
         </CardBody>
       </Card>
 
@@ -101,7 +118,7 @@ function Universities({ updateUserDetails, userType }: any) {
   );
 }
 
-export function UniversitiesList({ isLoading, list = [] }: any) {
+export function UniversitiesList({ isLoading, list = [], removeIndex }: any) {
   return (
     <div className="flex w-full flex-col items-center justify-center mt-4">
       {isLoading ? (
@@ -113,35 +130,52 @@ export function UniversitiesList({ isLoading, list = [] }: any) {
           })}
         >
           {list &&
-            list?.map(({ name, location }: University) => {
+            list?.map(({ name, location }: University, index: number) => {
               return (
-                <Button
-                  className={cn(
-                    "flex h-auto w-full justify-start gap-4 border-[1px] border-primary/20 bg-transparent p-2 opacity-100 hover:border-primary-200 hover:bg-primary-100"
-                  )}
-                  startContent={
-                    <div
-                      className={cn(
-                        "z-10 grid aspect-square h-12 w-12 place-items-center rounded-lg bg-gradient-to-tr from-primary to-secondary/80 p-3 text-white transition-all duration-300 ease-in-out"
-                      )}
-                    >
-                      <FaBuildingFlag className="h-6 w-6 self-center" />
-                    </div>
-                  }
-                >
-                  <div className="flex flex-col items-start">
-                    <h3 className="heading-4 mb-1 capitalize text-secondary font-bold">
-                      {name}
-                    </h3>
-                    {location && (
-                      <div className="flex max-w-[260px] justify-between gap-2">
-                        <p className=" truncate text-sm font-medium text-slate-400">
-                          {location}
-                        </p>
-                      </div>
+                <div className="flex w-full relative">
+                  <Button
+                    className={cn(
+                      "flex h-auto w-full justify-start gap-4 border-[1px] border-primary/20 bg-transparent p-2 opacity-100 hover:border-primary/50 hover:bg-primary/5"
                     )}
-                  </div>
-                </Button>
+                    startContent={
+                      <div
+                        className={cn(
+                          "z-10 grid aspect-square h-12 w-12 place-items-center rounded-lg bg-gradient-to-tr from-primary to-secondary/80 p-3 text-white transition-all duration-300 ease-in-out"
+                        )}
+                      >
+                        <FaBuildingFlag className="h-6 w-6 self-center" />
+                      </div>
+                    }
+                  >
+                    <div className="flex flex-col items-start">
+                      <h3 className="heading-4 mb-1 capitalize text-secondary font-bold">
+                        {name}
+                      </h3>
+                      {location && (
+                        <div className="flex max-w-[260px] justify-between gap-2">
+                          <p className=" truncate text-sm font-medium text-slate-400">
+                            {location}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </Button>
+                  <Tooltip
+                    content="Remove University"
+                    color="danger"
+                    placement="top"
+                  >
+                    <Button
+                      onPress={() => removeIndex(index)}
+                      isIconOnly
+                      variant="light"
+                      size="sm"
+                      className="absolute top-[25%] right-4 cursor-pointer"
+                    >
+                      <FaXmark className="w-8 h-8 font-normal p-2 rounded-full ml-auto hover:bg-red-500/10 text-red-300  transition-all ease-in-out duration-300 hover:text-red-500 " />
+                    </Button>
+                  </Tooltip>
+                </div>
               );
             })}
         </div>

@@ -1,103 +1,157 @@
 "use server";
-import { AUTH_SESSION } from "@/lib/constants";
-import { createSession, decrypt, verifySession } from "@/lib/session";
-import { APIResponse, LoginDetails, SignupDetails } from "@/lib/types";
-import { apiClient } from "@/lib/utils";
-import { cookies } from "next/headers";
+import { PrismaClient, Prisma, University } from "@prisma/client";
+
+const prisma = new PrismaClient();
 
 const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL || process.env.SERVER_URL;
 
 type ErrorBody = Error & { message: string; status: number };
 
-export async function createNewUserAccount<APIResponse>(
-  newUserData: SignupDetails
-) {
-  try {
-    const response = await fetch(
-      `${BASE_URL}/auth/register`, // URL
-      {
-        body: JSON.stringify(newUserData),
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
-  } catch (e) {
-    console.log("ERROR: ", e);
-  }
-}
+export async function createNewUser<APIResponse>(userData: any) {
+  const { firstName, lastName, email, gender, phoneNumber, userType } =
+    userData;
 
-export async function authenticateUser(
-  loginDetails: LoginDetails
-): Promise<APIResponse> {
   try {
-    const res = await apiClient.post(`${BASE_URL}/auth/login`, loginDetails, {
-      headers: {
-        "Content-Type": "application/json",
+    const user = await prisma.user.create({
+      data: {
+        firstName,
+        lastName,
+        email,
+        gender,
+        phoneNumber,
+        userType,
       },
-      withCredentials: true,
     });
-
-    // console.log("SERVER RESPONSE: ", res);
-    // Check if the response status is OK before parsing JSON
-    if (res.status !== 200) {
-      const error: ErrorBody = res?.data || res;
-      // console.error("Response Error: ", error);
-      return {
-        success: false,
-        message: `${error?.message}`,
-        data: null,
-        status: error?.status,
-      };
-    }
-
-    const response: APIResponse = res.data;
-    const user = response?.data?.user;
-    const role = response?.data?.user?.role;
-    const accessToken = response?.data?.accessToken;
-
-    await createSession(user, role, accessToken);
-
-    // SET COOKIE HERE...
-    // cookies().set({
-    //   name: AUTH_SESSION,
-    //   value: accessToken,
-    //   maxAge: 300 * 3,
-    //   httpOnly: true,
-    //   sameSite: "none",
-    //   secure: true,
-    // });
 
     return {
       success: true,
-      message: response.message,
-      data: response.data,
-      status: response.status,
+      message: "User created successfully",
+      data: user,
     };
-  } catch (error: Error | any) {
-    // console.log("ERROR DETAILS: ", error.response.data);
-    // let errorMassage;
-    // if (error.response) {
-    //   if
-
-    // }
+  } catch (error) {
+    const errorBody = error as ErrorBody;
     return {
       success: false,
-      message: error?.response?.data?.message || "No Server Response",
-      data: null,
-      status: error?.response?.status || error.status,
+      message: errorBody.message,
+      status: errorBody.status,
     };
   }
 }
 
-export async function getServerSession() {
-  const { isAuthenticated, session } = await verifySession();
-  return { isAuthenticated, session };
+export async function addNewPropertyAddress<APIResponse>(userData: any) {
+  const {
+    plotNo,
+    street,
+    city,
+    area,
+    province,
+    country,
+    rentalType,
+    propertyType,
+  } = userData;
+  try {
+    const address = await prisma.propertyAddress.create({
+      data: {
+        plotNo,
+        street,
+        city,
+        area,
+        province,
+        country,
+        rentalType,
+        propertyType,
+      },
+    });
+
+    return {
+      success: true,
+      message: "Property created successfully",
+      data: address,
+    };
+  } catch (error) {
+    const errorBody = error as ErrorBody;
+    return {
+      success: false,
+      message: errorBody.message,
+      status: errorBody.status,
+    };
+  }
 }
 
-export async function revokeToken() {
-  cookies().delete(AUTH_SESSION);
-  cookies().set("theme", "");
-  return verifySession();
+export async function addCloseByUniversities<APIResponse>(
+  universities: University[],
+  id: number
+) {
+  try {
+    // await prisma.propertyAddress.update({
+    //   where: {
+    //     id,
+    //   },
+    //   data: {
+    //     closestUniversity: {
+    //       connectOrCreate: universities.map((university) => ({
+    //         name: university.name,
+    //         location: university.location,
+    //       })),
+    //     },
+    //   },
+    // });
+    // return {
+    //   success: true,
+    //   message: "Property created successfully",
+    //   data: user,
+    // };
+  } catch (error) {
+    const errorBody = error as ErrorBody;
+    return {
+      success: false,
+      message: errorBody.message,
+      status: errorBody.status,
+    };
+  }
+}
+
+export async function createNewUniversity<APIResponse>(university: University) {
+  try {
+    await prisma.university.create({
+      data: {
+        name: university.name,
+        location: university.location,
+      },
+    });
+
+    const universities = await prisma.university.findMany();
+
+    return {
+      success: true,
+      message: "University added successfully",
+      data: universities,
+    };
+  } catch (error) {
+    const errorBody = error as ErrorBody;
+    return {
+      success: false,
+      message: errorBody.message,
+      status: errorBody.status,
+    };
+  }
+}
+
+
+export async function getAllUniversities<APIResponse>(university: University) {
+  try {
+    const universities = await prisma.university.findMany();
+    return {
+      success: true,
+      message: "University added successfully",
+      data: universities,
+    };
+  } catch (error) {
+    const errorBody = error as ErrorBody;
+    return {
+      success: false,
+      message: errorBody.message,
+      status: errorBody.status,
+    };
+  }
 }

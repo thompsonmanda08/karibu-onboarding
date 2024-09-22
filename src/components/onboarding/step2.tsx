@@ -21,14 +21,14 @@ const Step2 = ({
       <CardHeader title="Property Information" />
 
       <div className="flex flex-col gap-4">
-        <Input
+        {/* <Input
           isRequired
           type="text"
           variant="bordered"
           label="Property Location (Address)"
           value={addressLine1}
           onChange={(e) => updateDetails({ addressLine1: e.target.value })}
-        />
+        /> */}
         <Input
           type="text"
           variant="bordered"
@@ -101,9 +101,9 @@ const Step2 = ({
           <Radio value="SALE">House for sale</Radio>
         </RadioGroup>
         <Textarea
-          label="Location and Property descriptions"
+          label="Property description"
           variant="bordered"
-          placeholder="Describe where it is located using landmarks (optional) and also some details on whether is is a bedspace, a whole room or full house for rent etc."
+          placeholder="Include details on whether is is a bedspace, a whole room or full house for rent or sale."
           onChange={(e) => updateDetails({ feedback: e.target.value })}
         />
       </div>
