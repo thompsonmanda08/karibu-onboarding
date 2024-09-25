@@ -1,11 +1,12 @@
-"use client";
-
-import { Input } from "@nextui-org/react";
 import { OnboardingFormProps } from "./user_onboarding_form";
 import CardHeader from "../CardHeader";
 import Universities from "./university_list";
 
-const Step3 = ({ updateDetails, userType }: OnboardingFormProps) => {
+const Step3 = ({
+  updateDetails,
+  userType,
+  universities,
+}: OnboardingFormProps) => {
   // update email in parent component when user enters new email
   // TODO:
   return (
@@ -19,7 +20,10 @@ const Step3 = ({ updateDetails, userType }: OnboardingFormProps) => {
         }
       />
 
-      <Universities updateUserDetails={updateDetails} />
+      <Universities
+        selectedUniversities={universities}
+        updateUserDetails={updateDetails}
+      />
     </>
   );
 };

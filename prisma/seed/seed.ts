@@ -3,8 +3,8 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 const universities = [
+  { name: "Other", abbreviation: "O", location: "other" },
   { name: "University of Zambia", abbreviation: "UNZA", location: "Lusaka" },
-  { name: "Copperbelt University", abbreviation: "CBU", location: "Kitwe" },
   { name: "Copperbelt University", abbreviation: "CBU", location: "Kitwe" },
   { name: "ZCAS University", abbreviation: "ZCAS", location: "Lusaka" },
   {

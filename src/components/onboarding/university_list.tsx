@@ -1,11 +1,14 @@
 "use client";
 
 import { cn, notify } from "@/lib/utils";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Card,
   CardBody,
+  CardFooter,
+  CardHeader,
+  Checkbox,
   Tooltip,
   useDisclosure,
 } from "@nextui-org/react";
@@ -15,7 +18,7 @@ import CreateNewUniversity from "./ceate_new_university";
 import { FaBuildingFlag, FaXmark } from "react-icons/fa6";
 import { HiOutlinePlus } from "react-icons/hi";
 import Loader from "../Loader";
-import { APIResponse } from "@/lib/types";
+import Image from "next/image";
 
 type University = {
   name: string;
@@ -23,9 +26,10 @@ type University = {
   [x: string]: any;
 };
 
-function Universities({ updateUserDetails, userType }: any) {
+function Universities({ updateUserDetails, selectedUniversities }: any) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [loading, setLoading] = useState(false);
+  const [isSelected, setIsSelected] = React.useState(false);
   const [newUniversity, setNewUniversity] = useState<University>({
     name: "",
     location: "",
@@ -53,25 +57,21 @@ function Universities({ updateUserDetails, userType }: any) {
     setLoading(true);
 
     if (!newUniversity?.name || !newUniversity.location) {
-      notify("error", "Provide valid name and description!");
+      notify("error", "Provide valid name and location!");
       setLoading(false);
+      return;
     }
 
-    // const response = await createNewUniversity(newUniversity) || {};
+    setCloseByUniversities((prev) =>
+      Array.from(new Set([...prev, newUniversity]))
+    );
 
-    setCloseByUniversities((prev) => [...prev, newUniversity]);
     notify("success", "University Added!");
-    updateUserDetails({ universities: closeByUniversities });
-
-    // if (response?.success) {
-    //   notify("success", "University Added!");
-    //   onOpenChange();
-    //   setLoading(false);
-    //   return;
-    // }
-
-    // notify("error", "Failed to add University!");
-    // notify("error", response?.message);
+    // updateUserDetails({
+    //   universities: selectedUniversities
+    //     ? closeByUniversities //.concat(newUniversity)
+    //     : [newUniversity],
+    // });
 
     setLoading(false);
     onOpenChange();
@@ -83,33 +83,72 @@ function Universities({ updateUserDetails, userType }: any) {
     });
   }
 
+  useEffect(() => {
+    updateUserDetails({
+      universities: closeByUniversities,
+    });
+  }, [closeByUniversities]);
+
   return (
     <>
-      <Card className={cn("gap-6 p-2  w-full min-h-96 shadow-lg mt-8")}>
-        <CardBody>
-          <Button
-            onPress={onOpen}
-            size="lg"
-            isDisabled={loading}
-            variant="flat"
-            color="primary"
-            className={"px-4"}
-          >
-            <HiOutlinePlus className="aspect-square w-4" />
-            Add
-          </Button>
-          <UniversitiesList
-            isLoading={loading}
-            list={closeByUniversities}
-            removeIndex={removeIndex}
-          />
+      <Card className={cn("gap-6 p-2  w-full min-h-80 shadow-lg mt-8")}>
+        {!isSelected && (
+          <CardHeader className={"flex w-full flex-col gap-1"}>
+            <Button
+              onPress={onOpen}
+              size="lg"
+              isDisabled={loading}
+              variant="flat"
+              color="primary"
+              className={" w-full"}
+            >
+              <HiOutlinePlus className="aspect-square w-4" />
+              Add
+            </Button>
+          </CardHeader>
+        )}
+        <CardBody className="self-start items-start pt-0 mt-0">
+          {isSelected ? (
+            <div className="object-contain max-w-sm">
+              <Image
+                className=""
+                src={`/images/done.svg`}
+                alt="Complete Application Illustration"
+                unoptimized
+                width={300}
+                height={300}
+              />
+            </div>
+          ) : (
+            <UniversitiesList
+              isLoading={loading}
+              list={closeByUniversities}
+              removeIndex={removeIndex}
+            />
+          )}
         </CardBody>
+
+        <CardFooter>
+          <Checkbox
+            className="items-start"
+            classNames={{
+              label: "text-small text-slate-700 -mt-1",
+            }}
+            isSelected={isSelected}
+            onValueChange={setIsSelected}
+          >
+            In the case that you are not located near any university but still
+            want to be able to have your property listed on our platform, check
+            the box and you will be allowed to proceed
+          </Checkbox>
+        </CardFooter>
       </Card>
 
       <CreateNewUniversity
         isOpen={isOpen}
         onOpenChange={onOpenChange}
         handleSave={handleCreateNewUniversity}
+        setNewUniversity={setNewUniversity}
         editUniversityField={handleUpdateFields}
         handleClose={handleClose}
         loading={loading}

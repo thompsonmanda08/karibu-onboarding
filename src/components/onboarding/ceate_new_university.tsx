@@ -11,8 +11,8 @@ import {
   Autocomplete,
   AutocompleteItem,
 } from "@nextui-org/react";
-import { UNIVERSITIES, University } from "@/app/univarsities";
-import { useFilter } from "@react-aria/i18n";
+import { useQuery } from "@tanstack/react-query";
+import { getAllUniversities } from "@/app/actions";
 
 export default function CreateNewUniversity({
   handleSave,
@@ -20,15 +20,27 @@ export default function CreateNewUniversity({
   onOpenChange: openModal,
   editUniversityField,
   handleClose,
+  setNewUniversity,
   loading,
 }: any) {
   const [value, setValue] = React.useState<any>(undefined);
   const [selectedItem, setSelectedItem] = React.useState<any>(null);
 
+  const { data: universityResponse } = useQuery({
+    queryKey: ["universities"],
+    queryFn: async () => getAllUniversities(),
+    staleTime: 0,
+  });
+
+  const UNIVERSITIES = universityResponse?.data || [];
+
   useEffect(() => {
-    if (value != 0) {
+    // ID VALUE FOR OTHER IS 1
+    if (value != 1) {
       let selectedItem = UNIVERSITIES.find((item) => item.id == value);
       setSelectedItem(selectedItem);
+      setNewUniversity(selectedItem);
+    } else {
       editUniversityField({
         name: selectedItem?.name,
         location: selectedItem?.location,
@@ -60,7 +72,7 @@ export default function CreateNewUniversity({
                 )}
               </Autocomplete>
 
-              {value == 0 && (
+              {value == 1 && (
                 <Input
                   autoFocus
                   label="Name"
@@ -72,7 +84,7 @@ export default function CreateNewUniversity({
                   }}
                 />
               )}
-              {value != 0 && (
+              {value != 1 && (
                 <Input
                   label="Location"
                   isReadOnly
@@ -82,7 +94,7 @@ export default function CreateNewUniversity({
                 />
               )}
 
-              {value == 0 && (
+              {value == 1 && (
                 <Input
                   label="Location"
                   variant="bordered"

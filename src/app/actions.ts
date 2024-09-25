@@ -1,13 +1,12 @@
 "use server";
+import { APIResponse } from "@/lib/types";
 import { PrismaClient, Prisma, University } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
-const BASE_URL = process.env.NEXT_PUBLIC_SERVER_URL || process.env.SERVER_URL;
-
 type ErrorBody = Error & { message: string; status: number };
 
-export async function createNewUser<APIResponse>(userData: any) {
+export async function createNewUser(userData: any): Promise<APIResponse> {
   const { firstName, lastName, email, gender, phoneNumber, userType } =
     userData;
 
@@ -27,6 +26,7 @@ export async function createNewUser<APIResponse>(userData: any) {
       success: true,
       message: "User created successfully",
       data: user,
+      status: 201,
     };
   } catch (error) {
     const errorBody = error as ErrorBody;
@@ -34,11 +34,15 @@ export async function createNewUser<APIResponse>(userData: any) {
       success: false,
       message: errorBody.message,
       status: errorBody.status,
+      data: null,
     };
   }
 }
 
-export async function addNewPropertyAddress<APIResponse>(userData: any) {
+export async function addNewPropertyAddress(userData: {
+  [x: string]: any;
+  userId: number;
+}): Promise<APIResponse> {
   const {
     plotNo,
     street,
@@ -48,6 +52,8 @@ export async function addNewPropertyAddress<APIResponse>(userData: any) {
     country,
     rentalType,
     propertyType,
+    details,
+    userId,
   } = userData;
   try {
     const address = await prisma.propertyAddress.create({
@@ -60,6 +66,12 @@ export async function addNewPropertyAddress<APIResponse>(userData: any) {
         country,
         rentalType,
         propertyType,
+        details,
+        user: {
+          connect: {
+            id: userId,
+          },
+        },
       },
     });
 
@@ -67,6 +79,7 @@ export async function addNewPropertyAddress<APIResponse>(userData: any) {
       success: true,
       message: "Property created successfully",
       data: address,
+      status: 201,
     };
   } catch (error) {
     const errorBody = error as ErrorBody;
@@ -74,39 +87,48 @@ export async function addNewPropertyAddress<APIResponse>(userData: any) {
       success: false,
       message: errorBody.message,
       status: errorBody.status,
+      data: null,
     };
   }
 }
 
-export async function addCloseByUniversities<APIResponse>(
+export async function addCloseByUniversities(
   universities: University[],
-  id: number
-) {
+  addressId: number
+): Promise<APIResponse> {
   try {
-    // await prisma.propertyAddress.update({
-    //   where: {
-    //     id,
-    //   },
-    //   data: {
-    //     closestUniversity: {
-    //       connectOrCreate: universities.map((university) => ({
-    //         name: university.name,
-    //         location: university.location,
-    //       })),
-    //     },
-    //   },
-    // });
-    // return {
-    //   success: true,
-    //   message: "Property created successfully",
-    //   data: user,
-    // };
+    const address = await prisma.propertyAddress.update({
+      where: {
+        id: addressId,
+      },
+      data: {
+        closestUniversity: {
+          connectOrCreate: universities.map((university) => ({
+            where: {
+              id: university.id, // Specify the unique field used to identify the university
+            },
+            create: {
+              name: university.name,
+              location: university.location,
+            },
+          })),
+        },
+      },
+    });
+
+    return {
+      success: true,
+      message: "Property created successfully",
+      data: address,
+      status: 200,
+    };
   } catch (error) {
     const errorBody = error as ErrorBody;
     return {
       success: false,
       message: errorBody.message,
       status: errorBody.status,
+      data: null,
     };
   }
 }
@@ -117,6 +139,7 @@ export async function createNewUniversity<APIResponse>(university: University) {
       data: {
         name: university.name,
         location: university.location,
+        abbreviation: university.abbreviation,
       },
     });
 
@@ -137,8 +160,7 @@ export async function createNewUniversity<APIResponse>(university: University) {
   }
 }
 
-
-export async function getAllUniversities<APIResponse>(university: University) {
+export async function getAllUniversities<APIResponse>() {
   try {
     const universities = await prisma.university.findMany();
     return {

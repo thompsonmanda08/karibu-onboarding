@@ -21,14 +21,25 @@ const Step2 = ({
       <CardHeader title="Property Information" />
 
       <div className="flex flex-col gap-4">
-        {/* <Input
-          isRequired
-          type="text"
-          variant="bordered"
-          label="Property Location (Address)"
-          value={addressLine1}
-          onChange={(e) => updateDetails({ addressLine1: e.target.value })}
-        /> */}
+        <RadioGroup
+          label="Property Type"
+          orientation="horizontal"
+          classNames={{
+            wrapper:
+              "flex flex-col flex-wrap justify-between md:flex-row gap-4",
+          }}
+          value={rentalType}
+          onChange={(e: any) =>
+            updateDetails({
+              propertyType: e.target.value,
+            })
+          }
+        >
+          <Radio value="BED_SITTER">Bed Sitter</Radio>
+          <Radio value="BOARDING_HOUSE">Boarding House</Radio>
+          <Radio value="SERVANTS_QUARTERS">Quarters</Radio>
+          <Radio value="HOUSE">Full House</Radio>
+        </RadioGroup>
         <Input
           type="text"
           variant="bordered"
@@ -82,7 +93,7 @@ const Step2 = ({
           />
         </div>
         <RadioGroup
-          label="Property Listing type"
+          label="Listing Pricing"
           orientation="horizontal"
           className=""
           classNames={{
@@ -97,14 +108,14 @@ const Step2 = ({
         >
           <Radio value="FIXED_PRICE">Fixed Price Room/Bed space</Radio>
           <Radio value="VARIABLE_PRICE">Varibale Price Rooms/Bed space</Radio>
-          <Radio value="RENTAL">House for rent</Radio>
-          <Radio value="SALE">House for sale</Radio>
+          <Radio value="FULL_RENTAL">For rent</Radio>
+          <Radio value="FOR_SALE">For sale</Radio>
         </RadioGroup>
         <Textarea
           label="Property description"
           variant="bordered"
           placeholder="Include details on whether is is a bedspace, a whole room or full house for rent or sale."
-          onChange={(e) => updateDetails({ feedback: e.target.value })}
+          onChange={(e) => updateDetails({ details: e.target.value })}
         />
       </div>
     </>
